@@ -1,0 +1,42 @@
+---
+- hosts: all
+  tasks:
+     - name: ensure nginx is at the latest version
+       yum: name=nginx state=latest
+       become: yes
+     - name: Load nginx config
+       template: 
+            src: /home/ubuntusch/devops/ansibleExample/examples/ansiblePlayBooks/templates/nginx.conf.j2
+            dest: /etc/nginx/nginx.conf
+       become: yes  
+     - name: start nginx
+       service:
+          name: nginx
+          state: started
+       become: yes
+     - name: create sites-available directory
+       file: path=/etc/nginx/sites-available state=directory
+       become: yes
+     - name: create sites-enabled directory
+       file: path=/etc/nginx/sites-enabled state=directory
+       become: yes
+     - name: copy the nginx config file and restart nginx
+       copy:
+            src: /home/ubuntusch/devops/ansibleExample/examples/ansiblePlayBooks/configurationFiles/static_site.cfg
+            dest: /etc/nginx/sites-available/static_site.cfg
+       become: yes
+     - name: create symlink
+       file:
+            src: /etc/nginx/sites-available/static_site.cfg
+            dest: /etc/nginx/sites-enabled/default
+            state: link
+       become: yes
+     - name: copy the content of the web site
+       copy:
+            src: /home/ubuntusch/devops/ansibleExample/examples/ansiblePlayBooks/static-site-src/
+            dest: /home/ec2-user/static-site
+     - name: restart nginx
+       service:
+            name: nginx
+            state: restarted
+       become: yes
