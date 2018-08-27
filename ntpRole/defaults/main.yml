@@ -1,0 +1,19 @@
+#default variables used by ntp-role
+---
+
+ntp_enabled: true
+ntp_timezone: Europe/Athens
+
+ntp_manage_config: true
+
+ntp_area: ''
+ntp_servers:
+  - "0{{ ntp_area }}.pool.ntp.org iburst"
+  - "1{{ ntp_area }}.pool.ntp.org iburst"
+  - "2{{ ntp_area }}.pool.ntp.org iburst"
+  - "3{{ ntp_area }}.pool.ntp.org iburst"
+
+
+ntp_restrict:
+  - "127.0.0.1"
+  - "::1"  
